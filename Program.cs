@@ -1,4 +1,5 @@
 using System;
+using NetSpector.Command;
 using NetSpector.util;
 
 namespace NetSpector
@@ -7,8 +8,7 @@ namespace NetSpector
     {
         public static void Main(string[] args)
         {
-            Menu.Display();
-            Commands.Port.Scan("2.56.178.91", 22);
+            Menu.Initialise();
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
-using NetSpector.util;
 
-namespace NetSpector.Commands
+namespace NetSpector.Command
 {
     public static class Port
     {
