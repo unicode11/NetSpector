@@ -48,20 +48,24 @@ namespace NetSpector.util
                 }
                 else
                 {
-                    Console.WriteLine($"\n{prefix} {option}");
+                    Console.WriteLine($"\n{prefix} {option}\n\n");
                 }
                 Console.ResetColor();
             }
         }
 
-        private string AboutDisplay(int option)
+        private void AboutDisplay(int option)
         {
             if (option == 0)
-                return "Tools to check for exploits on specific port.\n";
-            if (option == 1)
-                return "Tools to test HTTP-exploitable.\n";
-
-            return "All of them were doomed from the start. Last bullet ended this parade of egoism and frauds.";
+                Console.WriteLine(
+                    "Tools to check for exploits on specific port.\n"
+                    );
+            else if (option == 1)
+                Console.WriteLine("Tools to test HTTP-exploitable.\n");
+            else if (option == 2)
+                Console.WriteLine("Tools to test SSL certificates exploits.\n");
+            else
+                Console.WriteLine("All of them were doomed from the start. Last bullet ended this parade of egoism and frauds.");
         }
 
         public int Run()
@@ -71,7 +75,7 @@ namespace NetSpector.util
             {
                 Console.Clear();
                 OptionsDisplay();
-                Console.WriteLine(AboutDisplay(SelectedIndex));
+                AboutDisplay(SelectedIndex);
                 
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 keyPressed = keyInfo.Key;
@@ -81,20 +85,37 @@ namespace NetSpector.util
                 else if (keyPressed == ConsoleKey.DownArrow & SelectedIndex < Options.Length - 1) // subtracting 1 because for some reason it goes beyond max
                     SelectedIndex++;
 
-            } while(keyPressed != ConsoleKey.Escape);
+            } while(keyPressed != ConsoleKey.Enter);
             
             return SelectedIndex;
+        }
+
+        public static void ReturnToMain()
+        {
+            Console.WriteLine("\nPress any key to return to the main menu...");
+            Console.ReadKey(true);
+            Initialise();
         }
 
         public static void Initialise()
         {
             string[] Options = {
-            "PORT", "HTTP", "SSL", "SQL", "BRUTE", 
+            "PORT", "HTTP", "SSL", "SQL", "BRUTE", "EXIT", 
             "Cirno-the-Great-Best-Fairy-Nine-out-of-Ten" // todo
             };
             
             Menu mainMenu = new Menu(Options);
-            mainMenu.Run();
+            int selectedIndex = mainMenu.Run();
+            switch (selectedIndex)
+            {
+                case 0:
+                    Console.WriteLine("there's naher we can do");
+                    ReturnToMain();
+                    break;
+                case 5:
+                    Environment.Exit(0);
+                    break;
+            }                
         }
     }
 }
