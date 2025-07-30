@@ -1,14 +1,14 @@
 using System;
-using NetSpector.Command;
 using NetSpector.util;
+using NetSpector.util.menu;
 
 namespace NetSpector
 {
     internal class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            Menu.Initialise();
+            Menu.Initialise(MAIN_MENU.Options);
         }
     }
 }

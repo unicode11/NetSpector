@@ -1,15 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
+using NetSpector.util.menu;
 
 namespace NetSpector.util
 {
     public class Menu
     {
         private int SelectedIndex;
-        private string[] Options;
+        private Option[] Options;
+
+        public struct Option
+        {
+            public string Name;
+            public string Description;
+            public Action action;
+            public Option(string name, string description, Action custaction)
+            {
+                Name = name;
+                Description = description;
+                action = custaction;
+            }
+
+            public void Invoker() // ЭТА ШТО ОТСЫЛКА НА ИНВОКЕРА ИЗ ДОТА 2???????
+            {
+                action?.Invoke();
+            }
+        };
+
         
-        public Menu(string[] options)
+        public Menu(Option[] options)
         {
             Options = options;
             SelectedIndex = 0;
@@ -20,13 +41,11 @@ namespace NetSpector.util
             int maxLength = 0;
             
             foreach (var option in Options)
-            {
-                if (maxLength < option.Length & !option.StartsWith("Cirno")) maxLength = option.Length;
-            }
+                maxLength = Math.Max(maxLength, option.Name.Length);
             
             for (int i = 0; i < Options.Length; i++)
             {
-                string option = Options[i];
+                Option option = Options[i];
                 char prefix;
 
                 if (i == SelectedIndex)
@@ -42,30 +61,9 @@ namespace NetSpector.util
                     Console.BackgroundColor = ConsoleColor.Black;
                 }
                 
-                if (!option.StartsWith("Cirno"))
-                {
-                    Console.WriteLine($"{prefix} <<  {option.PadRight(maxLength)} >>");
-                }
-                else
-                {
-                    Console.WriteLine($"\n{prefix} {option}\n\n");
-                }
+                Console.WriteLine($"{prefix} << {option.Name.PadRight(maxLength)} >>");
                 Console.ResetColor();
             }
-        }
-
-        private void AboutDisplay(int option)
-        {
-            if (option == 0)
-                Console.WriteLine(
-                    "Tools to check for exploits on specific port.\n"
-                    );
-            else if (option == 1)
-                Console.WriteLine("Tools to test HTTP-exploitable.\n");
-            else if (option == 2)
-                Console.WriteLine("Tools to test SSL certificates exploits.\n");
-            else
-                Console.WriteLine("All of them were doomed from the start. Last bullet ended this parade of egoism and frauds.");
         }
 
         public int Run()
@@ -75,7 +73,7 @@ namespace NetSpector.util
             {
                 Console.Clear();
                 OptionsDisplay();
-                AboutDisplay(SelectedIndex);
+                Console.WriteLine(Options[SelectedIndex].Description);
                 
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 keyPressed = keyInfo.Key;
@@ -94,18 +92,16 @@ namespace NetSpector.util
         {
             Console.WriteLine("\nPress any key to return to the main menu...");
             Console.ReadKey(true);
-            Initialise();
+            Initialise(MAIN_MENU.Options);
         }
 
-        public static void Initialise()
+        public static void Initialise(Option[] options = null)
         {
-            string[] Options = {
-            "PORT", "HTTP", "SSL", "SQL", "BRUTE", "EXIT", 
-            "Cirno-the-Great-Best-Fairy-Nine-out-of-Ten" // todo
-            };
+            if (options == null)
+                options = new Option[] { new Option("EXIT", "Exit", ReturnToMain)};
             
-            Menu mainMenu = new Menu(Options);
-            int selectedIndex = mainMenu.Run();
+            Menu menu = new Menu(options);
+            int selectedIndex = menu.Run();
             switch (selectedIndex)
             {
                 case 0:
@@ -113,6 +109,7 @@ namespace NetSpector.util
                     ReturnToMain();
                     break;
                 case 5:
+                    Console.WriteLine("bye");
                     Environment.Exit(0);
                     break;
             }                
