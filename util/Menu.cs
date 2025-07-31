@@ -54,20 +54,22 @@ namespace NetSpector.util
                 keyPressed = keyInfo.Key;
                 var numberKeys = new List<ConsoleKey>();
 
-                for (var i = 0; i < 10; i++) numberKeys.Add(ConsoleKey.D0 + i);
-
+                for (var i = 0; i < 10; i++) numberKeys.Add(ConsoleKey.D0 + i); // listing all of the number keys
                 if ((keyPressed == ConsoleKey.UpArrow) & (SelectedIndex > 0))
                 {
                     SelectedIndex--;
                 }
                 else if ((keyPressed == ConsoleKey.DownArrow) &
-                         (SelectedIndex <
-                          Options.Length - 1)) // subtracting 1 because it goes beyond limit
+                         (SelectedIndex < Options.Length - 1)) // subtracting 1 because it goes beyond limit
                 {
                     SelectedIndex++;
                 }
-                else if (numberKeys.Contains(keyPressed))
+                else if (numberKeys.Contains(keyPressed) & 
+                          numberKeys.IndexOf(keyPressed) < Options.Length) 
+                    // since we can't type -1 on keyboard we just need this to check if it's beyond limit
+                    // and for some fucking reason it's already substracted (prob got it from upper condition idk)
                 {
+                    Console.Write(Options.Length);
                     SelectedIndex = numberKeys.IndexOf(keyPressed);
                     return SelectedIndex;
                     break;
@@ -117,7 +119,10 @@ namespace NetSpector.util
 
             public void Invoker() // ЭТА ШТО ОТСЫЛКА НА ИНВОКЕРА ИЗ ДОТА 2???????
             {
-                Action?.Invoke();
+                if (Action != null)
+                    Action.Invoke();
+                else
+                    Exit();       
             }
         }
     }
@@ -170,7 +175,6 @@ namespace NetSpector.util
                 "| URL\n" +
                 "| Username", () =>
                     Menu.Exit())
-            // "Cirno-the-Great-Best-Fairy-Nine-out-of-Ten" // todo
         };
 
         public static Menu.Option[] PortMenu =

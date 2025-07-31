@@ -48,6 +48,7 @@
         <Compile Include="util\Logo.cs" />
     </ItemGroup>
     <ItemGroup>
+      <Content Include="schizo.txt" />
       <Content Include="util\logos.txt" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
