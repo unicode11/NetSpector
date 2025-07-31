@@ -46,7 +46,6 @@
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="util\Menu.cs" />
         <Compile Include="util\Logo.cs" />
-        <Compile Include="util\menu\MAIN_MENU.cs" />
     </ItemGroup>
     <ItemGroup>
       <Content Include="util\logos.txt" />

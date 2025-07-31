@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Net.Sockets;
+using NetSpector.util;
 
 namespace NetSpector.Command
 {
     public static class Port
     {
+        
+        
         public static void Scan(string address, int port)
         {
             using(TcpClient client = new TcpClient())
